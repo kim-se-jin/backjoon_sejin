@@ -1,6 +1,5 @@
 import java.io.*;
 import java.util.*;
-import java.awt.Point ;
 
 public class Main {
 
@@ -19,20 +18,13 @@ public class Main {
 		arr = new int[N];
 
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		for(int i=0;i<N;i++) arr[i] = stoi(st.nextToken());
-
-		MaxScore = Arrays.stream(arr).max().getAsInt();
-
-		for(int i=0;i<N;i++){
-			AllScore += ((double)arr[i]/MaxScore)*100 ;
-
+		// 2. 전체합 구한 다음 /maxScore/N
+		for(int i=0;i<N;i++){			
+			arr[i] = stoi(st.nextToken());
+			AllScore += arr[i];
 		}
 
-		System.out.println(AllScore/N);
+		Arrays.sort(arr);
+		System.out.println(AllScore/arr[N-1]/N * 100);
 	} 
-
-
 }
-
-// 40 80 60
-// 50 100 75
