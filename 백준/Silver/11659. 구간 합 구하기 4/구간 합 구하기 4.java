@@ -21,13 +21,16 @@ public class Main {
 		sumArr = new int[N+1]; // 누적합
 
 		st = new StringTokenizer(br.readLine());
-		for(int i=1;i<N+1;i++) sumArr[i] += sumArr[i-1] + stoi(st.nextToken());
+		// 값 입력받으며 누적합 구함
+		for(int i=1;i<N+1;i++) sumArr[i] += sumArr[i-1] + stoi(st.nextToken()); 
 		
-		for(int i=0;i<M;i++){
+		StringBuilder sb = new StringBuilder();
+		for(int i=0;i<M;i++){ 
 			st = new StringTokenizer(br.readLine());
 			int start = stoi(st.nextToken());
 			int end = stoi(st.nextToken());
-			System.out.println(sumArr[end]-sumArr[start-1]);
+			sb.append(sumArr[end]-sumArr[start-1]+" ");
 		}
+		System.out.println(sb.toString());
 	} 
 }
