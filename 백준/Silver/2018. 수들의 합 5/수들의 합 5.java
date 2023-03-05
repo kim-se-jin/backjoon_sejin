@@ -4,7 +4,6 @@ import java.util.*;
 public class Main {
 
 	static int N ;
-	static int[] sumArr ;
 
 	public static int stoi(String str){
 		return Integer.parseInt(str);
@@ -15,13 +14,6 @@ public class Main {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
 		N = stoi(br.readLine());
-		sumArr = new int[N+1];
-
-		// 누적합 계산
-		for(int i=1;i<N+1;i++){
-			sumArr[i] = sumArr[i-1] + i ;
-		}
-
 		// 누적합 구하기
 		System.out.println(twoPointer());
 	} 
@@ -31,12 +23,17 @@ public class Main {
 		int count = 0 ;
 		int start = 1 ;
 		int end = 1 ;
+		int result = 1 ;
 
 		while(start<=N && end<=N){
-			int result = sumArr[end] - sumArr[start-1];
 			if(result == N ) count ++ ;
-			if(result > N) start ++ ;
-			else end ++ ;
+			if(result > N){
+				result -= start ;
+				start ++ ;
+			}else{
+				end ++ ;
+				result += end ;
+			}
 		}
 
 		return count ;
