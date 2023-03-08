@@ -30,20 +30,19 @@ public class Main{
 		StringTokenizer st ;
 		N = Integer.parseInt(br.readLine()); // N개의 회의
 		room = new lectureRoom[N];
-		int count = 0 ;
 
 		for(int i=0;i<N;i++){
 			st = new StringTokenizer(br.readLine());
-			int start = stoi(st.nextToken());
-			int end = stoi(st.nextToken());
-			room[i] = new lectureRoom(start, end);
+			room[i] = new lectureRoom(stoi(st.nextToken()),  stoi(st.nextToken()));
 		}
 
-		Arrays.sort(room);
+		Arrays.sort(room); // 빨리 끝나는 시간 순대로 정렬
 
-		int befEnd = room[0].end ;
-		count ++ ;
+		int befEnd = room[0].end ; // 제일 빨리 끝나는 강의
+		int count = 1 ; 
 
+		// 그 다음 강의부터 
+			// 시작시간이 이전 제일 빨리 끝난 강의보다 빠를 때 count ++
 		for(int i=1;i<N;i++){
 			int nxtStart = room[i].start;
 			int nxtEnd = room[i].end;
@@ -51,7 +50,6 @@ public class Main{
 			if(befEnd <= nxtStart){
 				befEnd = nxtEnd;
 				count ++ ;
-				// System.out.println(nxtStart + " , " + nxtEnd);
 			}
 		}
 
