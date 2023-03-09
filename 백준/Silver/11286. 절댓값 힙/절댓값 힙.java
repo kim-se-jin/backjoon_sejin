@@ -27,7 +27,7 @@ public class Main{
 					sb.append(pq.poll()+"\n");
 				}
 			}
-			else pq.add(nowNum);
+			else pq.offer(nowNum);
 		}
 
 		System.out.println(sb.toString());
