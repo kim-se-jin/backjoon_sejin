@@ -6,6 +6,8 @@ public class Main{
 	static int N;
 	static ArrayList<Integer> befSolved ;
 	static HashMap<Integer, ArrayList<Integer>> history ;
+	static Stack<Integer>[] stack;
+	static StringTokenizer st ;
 
 	public static int stoi(String str){
 		return Integer.parseInt(str);
@@ -22,39 +24,33 @@ public class Main{
 		StringBuilder sb = new StringBuilder();
 		N = stoi(br.readLine()); // 쿼리 개수
 		history = new HashMap<>();
-
-		for(int i=0;i<N;i++){
-			StringTokenizer st  = new StringTokenizer(br.readLine());
+		stack = new Stack[N+1];
+		stack[0] = new Stack<>();
+		
+		for(int i=1;i<=N;i++){
+			st  = new StringTokenizer(br.readLine());
+			stack[i] = new Stack<>();
 			String query = st.nextToken();
-
-			// System.out.println(history);
-
-			if(history.containsKey(i-1)) befSolved = (ArrayList<Integer>)(history.get(i-1)).clone();
-			else befSolved = new ArrayList<>();
-
-			if(query.equalsIgnoreCase("s")){
-				if(befSolved.size()>0){
-					// 제일 마지막 해결 문제 제거
-					befSolved.remove(befSolved.size()-1); 
-				}
-			}else{
-				int num = stoi(st.nextToken());
-				if(query.equalsIgnoreCase("a")){
-					// 현재 문제를 전 arraylist에 추가
-					befSolved.add(num);
-				}else{ // t 인 경우
-					// System.out.println(num-2);
-					if(history.containsKey(num-2)) befSolved = history.get((num-2));
-					else befSolved = new ArrayList<>();
-
-				}
-				
+			switch(query){
+				case "s":
+					stack[i].addAll(stack[i-1]);
+					if(!stack[i].isEmpty()) stack[i].pop();
+					break;
+				case "a":
+					int num = stoi(st.nextToken());
+					stack[i].addAll(stack[i-1]);
+					stack[i].add(num);
+					break;
+				case "t":
+					int Tnum = stoi(st.nextToken());
+					stack[i].addAll(stack[Tnum-1]);
+					break;
 			}
-			// System.out.println(befSolved.toString());
-			history.put(i, befSolved);
-			if(befSolved.size() > 0 ) sb.append(befSolved.get(befSolved.size()-1)+"\n");
-			else sb.append(-1+"\n");
+
+			if(stack[i].isEmpty()) sb.append(-1+"\n");
+			else sb.append(stack[i].peek()+"\n");
 		}
+
 		System.out.println(sb.toString());
 
     }
