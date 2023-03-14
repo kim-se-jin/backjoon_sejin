@@ -1,59 +1,56 @@
 import java.io.*;
 import java.util.*;
 
-class lectureRoom implements Comparable<lectureRoom>{
-	int start, end ;
+class lectureRoom implements Comparable<lectureRoom>{ 
+	int start,end ;
 	lectureRoom(int start, int end){
-		this.start = start;
-		this.end = end;
+		this.start = start ;
+		this.end = end ;
 	}
 
 	@Override
-	public int compareTo(lectureRoom o) {
+	public int compareTo(lectureRoom o){
 		if(this.end == o.end) return this.start - o.start;
-		return this.end - o.end;
+		else return this.end-o.end;
 	}
-
 }
 
 public class Main{
 
-	static int N;
-	static lectureRoom[] room ;
+	static int N ;
+	static lectureRoom[] arr ;
 
+	// 모든 
 	public static int stoi(String str){
 		return Integer.parseInt(str);
 	}
 
     public static void main(String args[]) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st ;
-		N = Integer.parseInt(br.readLine()); // N개의 회의
-		room = new lectureRoom[N];
+		N = stoi(br.readLine());
+		arr = new lectureRoom[N];
 
+		StringTokenizer st;
 		for(int i=0;i<N;i++){
 			st = new StringTokenizer(br.readLine());
-			room[i] = new lectureRoom(stoi(st.nextToken()),  stoi(st.nextToken()));
+			arr[i] = new lectureRoom(stoi(st.nextToken()), stoi(st.nextToken()));
 		}
+		//<-- 값 입력받기
 
-		Arrays.sort(room); // 빨리 끝나는 시간 순대로 정렬
+		Arrays.sort(arr); // 빨리 끝나는 시간 순 정렬
 
-		int befEnd = room[0].end ; // 제일 빨리 끝나는 강의
-		int count = 1 ; 
+		// 한 개의 강의실로 최대 회의, 끝나면 바로 교체
 
-		// 그 다음 강의부터 
-			// 시작시간이 이전 제일 빨리 끝난 강의보다 빠를 때 count ++
+		// 첫번째로 끝나는 강의
+		int endTime = arr[0].end;
+		int count = 1 ;
+
 		for(int i=1;i<N;i++){
-			int nxtStart = room[i].start;
-			int nxtEnd = room[i].end;
-
-			if(befEnd <= nxtStart){
-				befEnd = nxtEnd;
+			if(endTime <= arr[i].start){
+				endTime = arr[i].end ;
 				count ++ ;
 			}
 		}
-
-
 		System.out.println(count);
     }
 }
