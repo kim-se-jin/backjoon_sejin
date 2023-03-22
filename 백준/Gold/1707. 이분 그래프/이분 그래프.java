@@ -1,61 +1,74 @@
 import java.io.*;
 import java.util.*;
 
-public class Main {
 
-	static int TestCase;
+public class Main{
+
+	static int TC, N ;
 	static int V,E;
-	static ArrayList<Integer>[] arr;
-	static int[] visited;
-	
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		TestCase = Integer.parseInt(br.readLine());
+	static ArrayList<Integer>[] arr ;
+	static int[] colors ;
+	public static int stoi(String str){
+		return Integer.parseInt(str);
+	}
 
-		while(TestCase --> 0){
+    public static void main(String args[]) throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		TC = stoi(br.readLine());
+
+
+		while(TC>0){
 			StringTokenizer st = new StringTokenizer(br.readLine());
-			V = Integer.parseInt(st.nextToken());
-			E = Integer.parseInt(st.nextToken());
+			V = stoi(st.nextToken()); // 정점 개수
+			E = stoi(st.nextToken()); // 간선 개수
+			arr = new ArrayList[V];
+			colors = new int[V];
 
-			arr = new ArrayList[V+1];
-			visited = new int[V+1];
+			for(int i=0;i<V;i++) arr[i] = new ArrayList<>();
 
-			for(int i=1;i<=V;i++) arr[i] = new ArrayList();
-			
 			for(int i=0;i<E;i++){
 				st = new StringTokenizer(br.readLine());
-				int a = Integer.parseInt(st.nextToken());
-				int b = Integer.parseInt(st.nextToken());
-				arr[a].add(b);
-				arr[b].add(a);
+				int x = stoi(st.nextToken())-1;
+				int y = stoi(st.nextToken())-1;
+				arr[x].add(y);
+				arr[y].add(x);
 			}
+			//<-- 값 입력받기
 
-			boolean BiGraph = true;
+			boolean flag = true;
+			for(int i=0;i<V;i++){
+				if(colors[i] == 0 )DFS(i,1);
+			}
+			// System.out.println(Arrays.toString(colors));
 
-			for(int i=1; i<=V;i++){
-				if(visited[i] == 0) DFS(arr, visited, i, 1);
-			} 
-			
-			for(int i=1; i<=V; i++){
+			for(int i=0;i<V;i++){
 				for(int j : arr[i]){
-					if(visited[i] == visited[j]){
-						BiGraph = false;
-					}
-
+					if(colors[i] == colors[j]) flag = false ;
 				}
 			}
 
-			if(BiGraph) System.out.println("YES");
-			else System.out.println("NO");
+			System.out.println(flag?"YES":"NO");
+			TC--;
 		}
 	}
 
-	public static void DFS(ArrayList<Integer>[] arr, int[] visited, int x, int c){
-		visited[x] = c ;
-		for(int y : arr[x]){
-			if(visited[y]==0) DFS(arr,visited,y,3-c);
+	public static void DFS(int idx, int nowColor){
+		if(colors[idx] != 0 ) return ;
+		colors[idx] = nowColor;
+		for(int nowIdx : arr[idx]){
+			if(colors[nowIdx] == 0 ){
+				DFS(nowIdx, 3-nowColor);
+			}
 		}
-		
 	}
-
 }
+
+
+// Union-Find XX
+// 1
+// 4 5
+// 1 2
+// 2 3
+// 3 4
+// 4 1
+// 1 4
