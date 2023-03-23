@@ -45,7 +45,6 @@ public class Main{
 				int y = stoi(inputs[j+1])-1;
 				if(find(x)!=find(y)) union(x,y);
 				partyArr[i].add(x);
-                partyArr[i].add(y);
 			}
 		}
         
@@ -69,7 +68,7 @@ public class Main{
 		for(ArrayList<Integer> arr : partyArr){
 			boolean check = false;
 			for(int idx : arr ){
-				if(truth[idx]){
+				if(visited[idx]){
 					check = true ;
 					break;
 				}
