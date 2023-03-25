@@ -3,21 +3,21 @@ import java.util.*;
 
 class voca implements Comparable<voca>{
 	String str;
-	int count ;
-	voca(String str, int count){
+	int count , len ;
+	voca(String str, int count, int len){
 		this.str = str;
 		this.count = count;
+		this.len = len;
 	} 
 
 	@Override
 	public int compareTo(voca o){
 		// System.out.println(o.str + " , " + o.count);
-		if(this.count == o.count){
-
-			if(o.str.length() == this.str.length()) return this.str.compareTo(o.str); // 우선순위 3. 알파벳 사전 순으로 앞에 있는 단어일수록 앞에 배치한다
-			else return o.str.length()-this.str.length(); // 우선순위 2. 해당 단어의 길이가 길수록 앞에 배치한다.
-		
-		}else return o.count - this.count; // 우선순위 1. 자주 나오는 단어일수록 앞에 배치한다.
+		if(this.count != o.count){ // 우선순위 1. 자주 나오는 단어일수록 앞에 배치한다.
+			return o.count - this.count;
+		}else if(o.len != this.len){ // 우선순위 2. 해당 단어의 길이가 길수록 앞에 배치한다.
+			return o.len-this.len;
+		}else return this.str.compareTo(o.str); // 우선순위 3. 알파벳 사전 순으로 앞에 있는 단어일수록 앞에 배치한다
 		
 	}
 }
@@ -44,7 +44,7 @@ public class Main {
 		}
 
 		for(String str : hm.keySet()){
-			pq.offer(new voca(str, hm.get(str)));
+			pq.offer(new voca(str, hm.get(str),str.length()));
 		}
 
 		StringBuilder sb = new StringBuilder();
