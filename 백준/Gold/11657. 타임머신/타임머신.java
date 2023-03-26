@@ -10,81 +10,79 @@ class node{
         this.start=start;
         this.cost = cost;
     }
- 
 }
  
  
 public class Main {
  
-    static int v;
-    static int e;
-    static List<node> list;
-    static long[] distance;
+    static int N,M;
+    static ArrayList<node> list;
+    static long[] dists;
+
+    public static int stoi(String str){
+        return Integer.parseInt(str);
+    }
  
     public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] s = br.readLine().split(" ");
-        v = Integer.parseInt(s[0]);
-        e = Integer.parseInt(s[1]);
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        N = stoi(st.nextToken());
+        M = stoi(st.nextToken());
         list = new ArrayList<>();
-        distance = new long[v + 1];
-        for (int i = 1; i <= v; i++) {
-            distance[i] = Integer.MAX_VALUE;
-        }
-        int a, b, c;
- 
- 
-        for (int i = 0; i < e; i++) {
-            String[] s1 = br.readLine().split(" ");
-        	a = Integer.parseInt(s1[0]);
-            b = Integer.parseInt(s1[1]);
-            c = Integer.parseInt(s1[2]);
-            list.add(new node(a,b, c));
+        dists = new long[N];
+        Arrays.fill(dists,Integer.MAX_VALUE);
+
+        int a, b, c ;
+        for (int i = 0; i < M ; i++) {
+            st = new StringTokenizer(br.readLine());
+        	a = stoi(st.nextToken())-1;
+            b = stoi(st.nextToken())-1;
+            c = stoi(st.nextToken());
+            list.add(new node(a,b,c));
         }
  
  
         StringBuilder sb = new StringBuilder();
  
         if(bell()){
-            for (int i = 2; i <= v; i++) {
-                if (distance[i] == Integer.MAX_VALUE) {
-                    sb.append(-1).append("\n");
-                    continue;
-                }
-                sb.append(distance[i]).append("\n");
+            for (int i = 1; i < N; i++) {
+                sb.append(dists[i] == Integer.MAX_VALUE?"-1":dists[i]);
+                sb.append("\n");
             }
-        }
-        else{
+        }else{
             sb.append(-1);
         }
  
-        System.out.println(sb.toString());
+        System.out.print(sb.toString());
     }
  
  
     public static boolean bell() {
-        distance[1] = 0;
-        for(int i=1; i<=v; i++){
+        dists[0] = 0; // 시작노드 초기화
+
+        // 전체 N번 반복
+        for(int i=0; i<N; i++){
+            // 매 반복마다 "모든 간선" 확인
             for(node a: list){
-                if(distance[a.start]==Integer.MAX_VALUE){
-                    continue;
-                }
-                if(distance[a.end]>distance[a.start]+a.cost){
-                    distance[a.end]=distance[a.start]+a.cost;
+                if(dists[a.start]==Integer.MAX_VALUE) continue;
+
+                if(dists[a.end]>dists[a.start]+a.cost){
+                    dists[a.end]=dists[a.start]+a.cost;
+
                 }
             }
         }
- 
-        for(int i=1; i<=v; i++){
+
+        for(int i=0; i<N; i++){
             for(node a: list){
-                if(distance[a.start]==Integer.MAX_VALUE){
-                    continue;
-                }
-                if(distance[a.end]>distance[a.start]+a.cost){
-                    return false;
+                if(dists[a.start]==Integer.MAX_VALUE) continue;
+
+                if(dists[a.end]>dists[a.start]+a.cost){
+                    return false; // 갱신된다 = 음수 싸이클
                 }
             }
         }
         return true;
+
     }
 }
