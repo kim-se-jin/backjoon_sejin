@@ -1,33 +1,42 @@
 import java.io.*;
 import java.util.*;
 
-// 시간복잡도 : O(N)
+class Main {
 
-public class Main {
+    static int K,N;
+    static int[] arr ;
+    public static int stoi(String str){
+        return Integer.parseInt(str);
+    }
+ 
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        N = stoi(st.nextToken()); // 수열 길이
+        K = stoi(st.nextToken()); // 연속 날짜
 
-	static int N,K; 
-	static int[] sumArr ;
+        arr = new int[N];
+        st = new StringTokenizer(br.readLine());
+        for(int i=0;i<N;i++)arr[i] = stoi(st.nextToken());
+        //<-- 값 입력받기
 
-	public static int stoi(String str){
-		return Integer.parseInt(str);
-	}
+        // 첫번째 합 구하기
+        int maxSum = 0 ;
+        for(int i=0;i<K;i++) maxSum += arr[i];
 
-	public static void main(String[] args) throws IOException {
+        int mIdx, addIdx, sum=maxSum ;
+        for(int i=0;i<N-K;i++){ 
+            mIdx = (i)%N;
+            addIdx = (i+K)%N ;
+            sum -= arr[mIdx] ; // 이전값 빼기
+            sum += arr[addIdx];
+            maxSum = Math.max(sum, maxSum);
+            // System.out.println(mIdx+" , " + addIdx + " : " + sum);
+        }
+        System.out.print(maxSum);
 
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		N = stoi(st.nextToken()); // N개의 수
-		K = stoi(st.nextToken())-1; // 연속적인 날짜의 수
-		sumArr = new int[N+1]; // 누적합
 
-		st = new StringTokenizer(br.readLine());
-		// 값 입력받으며 누적합 구함
-		for(int i=1;i<N+1;i++) sumArr[i] += sumArr[i-1] + stoi(st.nextToken()); 
-		
-		int MaxAns = Integer.MIN_VALUE;
-		for(int i=1;i<N+1-K;i++){ // 누적합에서 i~i+K개씩 값 계산하여 최댓값 구하기 
-			MaxAns= Math.max(MaxAns, sumArr[i+K]-sumArr[i-1]);
-		}
-		System.out.println(MaxAns);
-	} 
+
+    }
+
 }
