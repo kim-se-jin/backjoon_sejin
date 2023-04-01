@@ -8,28 +8,31 @@ class Solution {
         
         arr = new int[n+1][n+1];
         
-        int x,y;
+        int win,lose;
         for(int i=0;i<results.length;i++){
-            x = results[i][0];
-            y = results[i][1];
-            arr[x][y] = 1;
-            arr[y][x] = -1;
+            win = results[i][0];
+            lose = results[i][1];
+            arr[win][lose] = 1;
+            arr[lose][win] = -1;
         }
         
         for(int k=1;k<n+1;k++){
             for(int i=1;i<n+1;i++){
                 for(int j=1;j<n+1;j++){
                     if(i==j || k==i) continue ;
-                    if(arr[i][k] == 1 && arr[k][j] == 1){
+                    if(arr[i][j]==0 && arr[i][k] == 1 && arr[k][j] == 1){
+                        // System.out.println(i+" win !!");
                         arr[i][j] = 1 ;
                         arr[j][i] = -1 ;
                     }
-                    if(arr[i][k]==-1 && arr[k][j]== -1){
+                    if(arr[i][j]==0 && arr[i][k]==-1 && arr[k][j]== -1){
+                        // System.out.println(i+" lose !!");
                         arr[i][j] = -1;
                         arr[j][i] = 1 ;
                     }
                 }
             }
+            // System.out.println(k+" : " + Arrays.deepToString(arr));
         }
         
         for(int i=1;i<n+1;i++){
