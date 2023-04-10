@@ -18,8 +18,10 @@ public class Main {
         arr = new int[N];
         hm = new HashMap<>();
         
-        String[] inputs = br.readLine().split(" ");
-        for(int i=0;i<N;i++) arr[i] = stoi(inputs[i]);
+        st = new StringTokenizer(br.readLine());
+        for(int i= 0; i < N; i++) {
+            arr[i] = Integer.parseInt(st.nextToken());
+        }
         System.out.println(twoPointer());
 
     }
