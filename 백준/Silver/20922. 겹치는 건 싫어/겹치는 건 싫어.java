@@ -1,51 +1,44 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
+ 
 public class Main {
-
-    static int N,M,arr[];
-    static HashMap<Integer, Integer> hm;
-
-    public static int stoi(String str){
-        return Integer.parseInt(str);
-    }
-
-    public static void main(String[] args) throws IOException{
+    static int N, K;
+    static int[] arr, numbers;
+ 
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-
-        N = stoi(st.nextToken());
-        M = stoi(st.nextToken());
+ 
+        N = Integer.parseInt(st.nextToken());
+        K = Integer.parseInt(st.nextToken());
+ 
         arr = new int[N];
-        hm = new HashMap<>();
-        
+        numbers = new int[100001];
+ 
         st = new StringTokenizer(br.readLine());
         for(int i= 0; i < N; i++) {
-            arr[i] = Integer.parseInt(st.nextToken());
+            int number = Integer.parseInt(st.nextToken());
+            arr[i] = number;
         }
-        System.out.println(twoPointer());
-
-    }
-
-    public static int twoPointer(){
-        int start = 0 ;
-        int end = 0 ;
-        int ans = 0 ;
-
-        while(end<N && start<N){
-            // System.out.println("s : " + start + " ,e: " + end + ",hm: " + hm.toString());
-            while(end<N && hm.getOrDefault(arr[end], 0)<M){
-                // System.out.println("IN WHILE !! s : " + start + " ,e: " + end + ",hm: " + hm.toString());
-                // System.out.println(hm.getOrDefault(arr[end], 0));
-                hm.put(arr[end], hm.getOrDefault(arr[end], 0)+1);
-                end ++ ; 
+ 
+        int max = 0;
+        int left = 0;
+        int right = 0;
+        numbers[arr[right]]++;
+ 
+        while(right < N) {
+            if(numbers[arr[right]] <= K) {
+            	if(right - left + 1 > max) max = right - left + 1;
+            	right++;
+            	if(right == N) break;
+            	numbers[arr[right]]++;
             }
-            ans = Math.max(ans, end-start);
-            hm.put(arr[start], hm.get(arr[start])-1);
-            start ++ ;
-            // hm.put(arr[start],hm.getOrDefault(arr[start], 0)+1);
+            else {
+            	numbers[arr[left]]--;
+            	left++;
+            }
         }
-
-        if(ans == 0) ans = N ;
-        return ans;
+ 
+        System.out.println(max);
     }
 }
