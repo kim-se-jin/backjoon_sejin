@@ -14,34 +14,32 @@ public class Main {
 		for(int i=0;i<N;i++){
 			arr[i] = Integer.parseInt(st.nextToken());
 		}
-
-		// 1. DFS -> 시간초과 날 것 같은데
-		// 2. DP -> 4개를 확인할 방도가 없지 않을까
-		// 3. 정렬 후 이분탐색
-		Arrays.sort(arr);
-		twoPointer();
-		System.out.println(ans);
+		System.out.println(twoPointer());
     }
 
-	static int ans = Integer.MAX_VALUE;
-	public static void twoPointer(){
+	public static int twoPointer(){
+		int height_1, height_2, min, left, right;
+		int ans = Integer.MAX_VALUE;
+		Arrays.sort(arr); // 1. 정렬
 
-		for(int i=0;i<N-3;i++){
-			for(int j=i+3;j<N;j++){
-				// System.out.println(i+ " , " + j);
-				int left=i+1;
-				int	right=j-1;
+		for(int i=0;i<N;i++){ // i,j 눈사람1
+			for(int j=i+3;j<N;j++){ // i+3 으로 사이에 최소 2개의 눈사람 생성
+				height_1 = arr[i]+arr[j];
+
+				left = i+1; // left,right 눈사람2
+				right = j-1;
 				while(left<right){
-					int res = arr[left]+arr[right]-arr[i]-arr[j];
-					if(ans>Math.abs(res)) ans = Math.abs(res);
-					
-					if(res>0)right --;
-					else left ++ ;
+					height_2 = arr[left]+arr[right];
+					if(height_1 == height_2) return 0;
+					else if (height_1 > height_2) left ++ ;
+					else if ( height_1 < height_2 ) right -- ;
 
+					ans = Math.min(ans,Math.abs(height_1 - height_2));
 				}
+
 			}
 		}
-		
-		
+		return ans ;
 	}
+
 }
