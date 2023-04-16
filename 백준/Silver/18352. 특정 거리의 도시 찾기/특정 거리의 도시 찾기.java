@@ -1,79 +1,63 @@
 import java.io.*;
 import java.util.*;
 
-class Node implements Comparable<Node>{
-	int idx, dist;
-	Node(int idx, int dist){
-		this.idx = idx ;
-		this.dist = dist ;
-	}
-
-	@Override
-	public int compareTo(Node o){
-		return this.dist-o.dist ;
+class Node{
+	int x,y,cost;
+	Node(int x, int y, int cost){
+		this.x=x;
+		this.y=y;
+		this.cost=cost;
 	}
 }
 
-public class Main{
-
-	static int N,M,K,start;
-	static ArrayList<Integer>[] map;
-	static int[] dists ;
-
-	public static int stoi(String str){
-		return Integer.parseInt(str);
-	}
-
-    public static void main(String args[]) throws IOException{
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+public class Main {
+	static int N,M,K,X,dist[];
+	static ArrayList<Integer>[] graph ;
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));		
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		N = stoi(st.nextToken()); // 도시의 개수
-		M = stoi(st.nextToken()); // 도로의 개수
-		K = stoi(st.nextToken()); // 거리 정보
-		start = stoi(st.nextToken())-1; // 출발 도시
 
-		map = new ArrayList[N];
-		for(int i=0;i<N;i++)map[i] = new ArrayList<>();
-		dists = new int[N];
-		Arrays.fill(dists, Integer.MAX_VALUE);
+		N = Integer.parseInt(st.nextToken()); // N개의 도시
+		M = Integer.parseInt(st.nextToken()); // M개의 도로
+		K = Integer.parseInt(st.nextToken()); // 거리정보
+		X = Integer.parseInt(st.nextToken()); // 출발도시
+
+		dist = new int[N];
+		Arrays.fill(dist, 10000001);
+		graph = new ArrayList[N];
+		for(int i=0;i<N;i++)graph[i] = new ArrayList<>();
 
 		for(int i=0;i<M;i++){
 			st = new StringTokenizer(br.readLine());
-			int x = stoi(st.nextToken())-1;
-			int y = stoi(st.nextToken())-1;
-			map[x].add(y);
+			int x = Integer.parseInt(st.nextToken())-1;
+			int y = Integer.parseInt(st.nextToken())-1;
+			graph[x].add(y);
 		}
-
-		// X에서 출발해서 최단거리 구하기
-		dijkstra();
-
-		// 답 출력
+		
+		dijkstra(X-1);
 		StringBuilder sb = new StringBuilder();
 		for(int i=0;i<N;i++){
-			if(dists[i] == K) sb.append(i+1+"\n");
+			if(dist[i] == K) sb.append((i+1)+"\n");
 		}
-
-		if(sb.length() == 0) System.out.print(-1);
+		if(sb.length()==0) System.out.print(-1);
 		else System.out.print(sb);
-	}
+    }
 
-	public static void dijkstra(){
+	public static void dijkstra(int idx){
+		dist[idx] = 0 ;
 
 		PriorityQueue<Integer> pq = new PriorityQueue<>();
-		pq.add(start);
-		dists[start] = 0 ;
+		pq.add(idx);
 
 		while(!pq.isEmpty()){
-			int idx = pq.poll();
-			for(int nxt : map[idx]){
-				if(dists[nxt] > dists[idx]+1){
-					dists[nxt] = dists[idx]+1;
-					pq.offer(nxt);
+			int now = pq.poll();
+			for(int nxt : graph[now]){
+				if(dist[nxt] > dist[now]+1){
+					dist[nxt] = dist[now]+1;
+					pq.add(nxt);
 				}
-				}
+			}
 		}
 
 	}
-
 }
-
