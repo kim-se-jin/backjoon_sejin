@@ -12,6 +12,8 @@ public class Main {
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));		
 		int tc = stoi(br.readLine());
+		StringBuilder sb = new StringBuilder();
+
 		while(tc-->0){
 			N = stoi(br.readLine());
 			inputs = br.readLine().split(" ");
@@ -27,8 +29,9 @@ public class Main {
 				}
 			}
 
-			for(int i=0;i<N;i++) System.out.print(dq.poll());
-			System.out.println();
+			for(int i=0;i<N;i++) sb.append(dq.poll());
+			sb.append("\n");
 		}
+		System.out.print(sb);
     }
 }
