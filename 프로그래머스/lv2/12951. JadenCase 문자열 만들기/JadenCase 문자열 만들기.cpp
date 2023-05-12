@@ -1,27 +1,17 @@
 #include <string>
 #include <vector>
-#include <iostream>
 
 using namespace std;
 
 string solution(string s) {
     string answer = "";
-    bool first = true ;
-    for(int i=0;i<s.size();i++){
-        
-        if(s[i] == ' '){
-            first = true ;
-            answer += " ";
-            continue ;
-        }
-        
-        if(first){ // 공백 다음 문자
-            answer += toupper(s[i]);
-            first = false ;
-        }else{
-            answer += tolower(s[i]);
-        }
-        
+
+    answer += toupper(s[0]); // 첫번째 무조건 대문자
+    for(int i=1; i<s.size(); i++){
+        answer += (s[i-1] == ' ' ? toupper(s[i]):tolower(s[i]));
     }
+    
+    
+
     return answer;
 }
