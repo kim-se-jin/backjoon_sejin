@@ -1,105 +1,89 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
+class Main {
+	static int stoi(String s) { return Integer.parseInt(s); }
 
-public class Main{
-
-	static int N,M,K ;
-	static StringBuilder sb ;
-	static int[] parent;
-	static boolean[] truth;
-	static ArrayList<Integer>[] partyArr;
-	static boolean[] visited ;
-
-	public static int stoi(String str){
-		return Integer.parseInt(str);
-	}
-
-    public static void main(String args[]) throws IOException{
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	static int N,M,FactKnowPeople ;
+	static boolean[] knowFact;
+	static ArrayList<Integer>[] partyArr ;
+	static Queue<Integer> q;
+	
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		sb = new StringBuilder();
 
 		N = stoi(st.nextToken()); // 사람 수
 		M = stoi(st.nextToken()); // 파티 수
+		partyArr = new ArrayList[M];
+		q = new LinkedList<>();
 
+
+		// 진실을 아는 사람 -->
 		st = new StringTokenizer(br.readLine());
-		K = stoi(st.nextToken()); // 진실을 아는 사람
-		make();
-
-		for(int i=0;i<K;i++){ // 진실 아는 사람 입력받기
+		FactKnowPeople = stoi(st.nextToken());
+		if(FactKnowPeople == 0){
+			System.out.println(M);
+			return ;
+		}
+		knowFact = new boolean[N];
+		for(int i=0;i<FactKnowPeople;i++){
 			int now = stoi(st.nextToken())-1;
-			truth[now] = true ;
+			knowFact[now] = true ;
+			q.add(now);
 		}
+		//<--
 
-		for(int i=0;i<M;i++){ // 각 파티 참여자 입력받기
-			String[] inputs = br.readLine().split(" ");
-			int peopleNum = stoi(inputs[0]);
+		// 파티마다 오는 사람 수, 번호
+		for(int i=0;i<M;i++){
+			st = new StringTokenizer(br.readLine());
+			int nums = stoi(st.nextToken());
+			partyArr[i] = new ArrayList<>();
 
-			if(peopleNum<=1){
-				partyArr[i].add(stoi(inputs[1])-1);
-				continue ;
-			}
-			for(int j=1;j<peopleNum;j++){
-				int x = stoi(inputs[j])-1;
-				int y = stoi(inputs[j+1])-1;
-				if(find(x)!=find(y)) union(x,y);
-				partyArr[i].add(x);
+			for(int j=0;j<nums;j++){
+				partyArr[i].add(stoi(st.nextToken())-1);
+				
 			}
 		}
-        
-        visited = new boolean[N];
-		// N명을 탐색하며 진실을 알고있는 사람인 경우, 관련된 사람을 모두 true 로
-		for(int i=0;i<N;i++){
-			if(truth[i] && !visited[i]){
-				int root = find(i);
-				for(int j=0;j<N;j++){
-					if(find(j) == root ){
-						truth[j] = true;
-						visited[j] = true ;
+		//<--
+
+		spreadFact();
+		System.out.println(CheckOkLie());
+	}
+
+	public static void spreadFact(){
+		while(!q.isEmpty()){
+			int now = q.poll();
+
+			for(int j=0;j<M;j++){
+				if(partyArr[j].contains(now)){
+					for(int k=0;k<partyArr[j].size();k++){
+						int nowPeople = partyArr[j].get(k);
+						if(!knowFact[nowPeople]){
+							knowFact[nowPeople] = true ;
+							q.add(nowPeople);
+						}
 					}
 				}
 			}
+
 		}
+	}
 
-		// System.out.println(Arrays.toString(visited));
-		int count = 0 ;
+	public static int CheckOkLie(){
+		int cnt = 0 ;
 
-		for(ArrayList<Integer> arr : partyArr){
-			boolean check = false;
-			for(int idx : arr ){
-				if(visited[idx]){
+		for(int i=0;i<M;i++){
+			boolean check = false ;
+			for(int j=0;j<partyArr[i].size();j++){
+				if(knowFact[partyArr[i].get(j)]){
 					check = true ;
 					break;
 				}
 			}
-			if(!check)count ++;
+			if(!check) cnt ++ ;
 		}
 
-		System.out.println(count);
-
+		return cnt ;
 	}
-
-	public static void make(){
-		partyArr = new ArrayList[M];
-		for(int i=0;i<M;i++) partyArr[i] = new ArrayList<>();
-
-		parent = new int[N]; // 부모 초기값 설정
-		for(int i=0;i<N;i++)parent[i] = i ;
-		truth = new boolean[N];
-
-	}
-
-	public static void union(int x, int y){
-		// 그냥 여기서 visited면 visited로 바꾸면 안되남
-		y = find(y);
-		parent[y] = x ;
-	}
-
-	public static int find(int idx){
-		if(parent[idx] == idx) return idx ;
-		else return find(parent[idx]);
-	}
-
-
 }
